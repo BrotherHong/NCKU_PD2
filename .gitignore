@@ -1,10 +1,16 @@
+# ignore all
 *
-!**/
 
-!**/*.c
-!**/*.cpp
-!**/*.h
+# unignore directory
+!*/
 
-!**/.gitignore
+# unignore c/c++/h file
+!*.c
+!*.cpp
+!*.h
 
-!**/makefile
+# unignore .gitignore
+!.gitignore
+
+# unignore makefile
+!makefile

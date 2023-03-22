@@ -9,6 +9,9 @@
 !*.cpp
 !*.h
 
+# unignore csv file
+!*.csv
+
 # unignore .gitignore
 !.gitignore
 

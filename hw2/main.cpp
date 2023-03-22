@@ -30,7 +30,7 @@ class Employee {
             if (gender != e.gender) {
                 return gender == 'f';
             }
-            return true;
+            return false;
         }
 
         int getID() {

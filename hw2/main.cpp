@@ -72,6 +72,8 @@ int main(int argc, char **argv) {
         employees.push_back(Employee(id, age, gender, salary));        
     }
 
+    input.close();
+
     sort(employees.begin(), employees.end());
 
     int currSalary = employees[0].getSalary();

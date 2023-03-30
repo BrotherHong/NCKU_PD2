@@ -1,11 +1,11 @@
-#include "mytime.h"
-#include <string>
+#include "date.h"
 
+#include <string>
 using namespace std;
 
-MyTime::MyTime() : MyTime(0, 0, 0, 0, 0) {}
+Date::Date() : Date(0, 0, 0, 0, 0) {}
 
-MyTime::MyTime(int year, int month, int day, int hour, int minute) {
+Date::Date(int year, int month, int day, int hour, int minute) {
     this->year = year;
     this->month = month;
     this->day = day;
@@ -13,7 +13,7 @@ MyTime::MyTime(int year, int month, int day, int hour, int minute) {
     this->minute = minute;
 }
 
-bool MyTime::operator < (const MyTime &o2) const {
+bool Date::operator < (const Date &o2) const {
     if (year != o2.year) {
         return year < o2.year;
     }
@@ -32,31 +32,31 @@ bool MyTime::operator < (const MyTime &o2) const {
     return false;
 }
 
-long long MyTime::operator - (const MyTime &o2) const {
+long long Date::operator - (const Date &o2) const {
     return getTotalMinutes() - o2.getTotalMinutes();
 }
 
-int MyTime::getYear() const {
+int Date::getYear() const {
     return year;
 }
 
-int MyTime::getMonth() const {
+int Date::getMonth() const {
     return month;
 }
 
-int MyTime::getDate() const {
+int Date::getDate() const {
     return day;
 }
 
-int MyTime::getHour() const {
+int Date::getHour() const {
     return hour;
 }
 
-int MyTime::getMinute() const {
+int Date::getMinute() const {
     return minute;
 }
 
-long long MyTime::getTotalMinutes() const {
+long long Date::getTotalMinutes() const {
     long long t = year;
 
     t *= 12; // 12 month per year
@@ -71,15 +71,15 @@ long long MyTime::getTotalMinutes() const {
     return t;
 }
 
-MyTime fromYYYYMMDDhhmm(string str) {
+Date fromString(string str) {
     int Y, M, D, h, m;
 
     sscanf(str.c_str(), "%04d%02d%02d%02d%02d", &Y, &M, &D, &h, &m);
 
-    return MyTime(Y, M, D, h, m);
+    return Date(Y, M, D, h, m);
 }
 
-bool isSameDate(const MyTime &o1, const MyTime &o2) {
+bool isSameDay(const Date &o1, const Date &o2) {
     if (o1.getYear() != o2.getYear()) return false;
     if (o1.getMonth() != o2.getMonth()) return false;
     return o1.getDate() == o2.getDate();

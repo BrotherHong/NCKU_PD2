@@ -1,10 +1,10 @@
-#ifndef MYTIME_H
-#define MYTIME_H
+#ifndef DATE_H
+#define DATE_H
 
 #include<string>
 using namespace std;
 
-class MyTime {
+class Date {
     private:
         int year;
         int month;
@@ -15,11 +15,11 @@ class MyTime {
         long long getTotalMinutes() const;
 
     public:
-        MyTime();
-        MyTime(int year, int month, int day, int hour, int minute);
+        Date();
+        Date(int year, int month, int day, int hour, int minute);
 
-        bool operator < (const MyTime &o2) const;
-        long long operator - (const MyTime &o2) const;
+        bool operator < (const Date &o2) const;
+        long long operator - (const Date &o2) const;
 
         int getYear() const;
         int getMonth() const;
@@ -28,8 +28,8 @@ class MyTime {
         int getMinute() const;
 };
 
-MyTime fromYYYYMMDDhhmm(string str);
+Date fromString(string str);
 
-bool isSameDate(const MyTime &o1, const MyTime &o2);
+bool isSameDay(const Date &o1, const Date &o2);
 
 #endif

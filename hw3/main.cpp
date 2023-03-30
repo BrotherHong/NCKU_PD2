@@ -8,8 +8,8 @@
 #include <map>
 #include <algorithm>
 
-#include "mytime.h"
-#include "check_record.h"
+#include "date.h"
+#include "sign_record.h"
 
 #define OVERLOAD_HR 8
 
@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    vector<CheckRecord> records;
+    vector<SignRecord> records;
 
     string line;
     while (getline(inFile, line)) {
@@ -37,15 +37,15 @@ int main(int argc, char **argv) {
         }
 
         int id = stoi(data[0]);
-        CheckType type = (data[1].size() == 7 ? IN : OUT);
-        MyTime stamp = fromYYYYMMDDhhmm(data[2]);
+        SignType type = (data[1].size() == 7 ? IN : OUT);
+        Date stamp = fromString(data[2]);
 
-        records.push_back(CheckRecord(id, type, stamp));
+        records.push_back(SignRecord(id, type, stamp));
     }
 
     sort(records.begin(), records.end());
 
-    map<int, vector<CheckRecord>> personalRecord;
+    map<int, vector<SignRecord>> personalRecord;
     for (auto &record : records) {
         int id = record.getID();
         personalRecord[id].push_back(record);
@@ -57,22 +57,27 @@ int main(int argc, char **argv) {
         int overload = 0;
         int forget = 0;
 
-        CheckRecord *lastRecord = nullptr;
+        SignRecord *lastRecord = nullptr;
 
         for (auto &record : recordPair.second) {
+
             if (record.getType() == IN) {
+
                 if (lastRecord && lastRecord->getType() == IN) {
                     forget++;
                 }
+                
             } else if (record.getType() == OUT) {
+
                 if (!lastRecord || lastRecord->getType() == OUT) {
                     forget++;
-                } else { // last record is check IN
-                    MyTime last = lastRecord->getTimestamp();
-                    MyTime curr = record.getTimestamp();
+                } else { 
+                    // last record is check IN
+                    Date lastTime = lastRecord->getTimestamp();
+                    Date currTime = record.getTimestamp();
 
-                    if (isSameDate(last, curr)) {
-                        if (curr - last > OVERLOAD_HR*60) {
+                    if (isSameDay(lastTime, currTime)) {
+                        if (currTime - lastTime > OVERLOAD_HR*60) {
                             overload++;
                         }
                     } else {

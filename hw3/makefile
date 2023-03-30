@@ -1,13 +1,13 @@
 all: hw3
 
-hw3: main.cpp check_record.o mytime.o
-	g++ main.cpp check_record.o mytime.o -o hw3
+hw3: main.cpp sign_record.o date.o
+	g++ main.cpp sign_record.o date.o -o hw3
 
-check_record.o: check_record.cpp
-	g++ -c check_record.cpp
+sign_record.o: sign_record.cpp
+	g++ -c sign_record.cpp
 
-mytime.o: mytime.cpp
-	g++ -c mytime.cpp
+date.o: date.cpp
+	g++ -c date.cpp
 
 clean:
 	rm *.o hw3

@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
                             overload++;
                         }
                     } else {
-                        forget++;
+                        forget += 2;
                     }
                 }
             }

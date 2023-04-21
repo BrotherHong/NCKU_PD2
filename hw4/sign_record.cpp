@@ -5,8 +5,8 @@ SignRecord::SignRecord(int id, SignType type, Date date) :
     id(id), type(type), date(date) {}
 
 bool SignRecord::operator < (const SignRecord &o2) const {
-    if (type != o2.type) {
-        return type == IN;
+    if (id != o2.id) {
+        return id < o2.id;
     }
     return date < o2.date;
 }

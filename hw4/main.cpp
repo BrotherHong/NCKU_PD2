@@ -1,19 +1,18 @@
 #include <iostream>
 #include <fstream>
-
 #include <string>
 #include <sstream>
-
 #include <vector>
 #include <map>
 #include <algorithm>
-
 #include "date.h"
 #include "sign_record.h"
-
 #define OVERLOAD_HR 8
-
 using namespace std;
+
+vector<SignRecord> records;
+
+void readRecords();
 
 int main(int argc, char **argv) {
 
@@ -23,8 +22,16 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    vector<SignRecord> records;
+    readRecords(inFile);
 
+    sort(records.begin(), records.end());
+
+    
+
+    return 0;
+}
+
+void readRecords(ifstream &inFile) {
     string line;
     while (getline(inFile, line)) {
 
@@ -42,8 +49,4 @@ int main(int argc, char **argv) {
 
         records.push_back(SignRecord(id, type, stamp));
     }
-
-    sort(records.begin(), records.end());
-
-    return 0;
 }

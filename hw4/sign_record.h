@@ -9,17 +9,17 @@ enum SignType {
 
 class SignRecord {
     public:
-        SignRecord(int id, SignType type, Date timestamp);
+        SignRecord(int id, SignType type, Date date);
         
         bool operator < (const SignRecord &o2) const;
 
         int getID() const;
         SignType getType() const;
-        Date getTimestamp() const;
+        Date getDate() const;
 
     private:
         int id;
         SignType type;
-        Date timestamp;
+        Date date;
 };
 #endif

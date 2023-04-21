@@ -1,17 +1,14 @@
 #include "sign_record.h"
 #include "date.h"
 
-SignRecord::SignRecord(int id, SignType type, Date timestamp) {
-    this->id = id;
-    this->type = type;
-    this->timestamp = timestamp;
-}
+SignRecord::SignRecord(int id, SignType type, Date date) :
+    id(id), type(type), date(date) {}
 
 bool SignRecord::operator < (const SignRecord &o2) const {
     if (type != o2.type) {
         return type == IN;
     }
-    return timestamp < o2.timestamp;
+    return date < o2.date;
 }
 
 int SignRecord::getID() const {
@@ -22,6 +19,6 @@ SignType SignRecord::getType() const {
     return type;
 }
     
-Date SignRecord::getTimestamp() const {
-    return timestamp;
+Date SignRecord::getDate() const {
+    return date;
 }

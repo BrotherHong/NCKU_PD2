@@ -45,55 +45,5 @@ int main(int argc, char **argv) {
 
     sort(records.begin(), records.end());
 
-    map<int, vector<SignRecord>> personalRecord;
-    for (auto &record : records) {
-        int id = record.getID();
-        personalRecord[id].push_back(record);
-    }
-
-    for (auto recordPair : personalRecord) {
-        int id = recordPair.first;
-
-        int overload = 0;
-        int forget = 0;
-
-        SignRecord *lastRecord = nullptr;
-
-        for (auto &record : recordPair.second) {
-
-            if (record.getType() == IN) {
-
-                if (lastRecord && lastRecord->getType() == IN) {
-                    forget++;
-                }
-                
-            } else if (record.getType() == OUT) {
-
-                if (!lastRecord || lastRecord->getType() == OUT) {
-                    forget++;
-                } else { 
-                    // last record is check IN
-                    Date lastTime = lastRecord->getTimestamp();
-                    Date currTime = record.getTimestamp();
-
-                    if (Date::isSameDay(lastTime, currTime)) {
-                        if (currTime - lastTime > OVERLOAD_HR*60) {
-                            overload++;
-                        }
-                    } else {
-                        forget += 2;
-                    }
-                }
-            }
-            lastRecord = &record;
-        }
-
-        if (lastRecord && lastRecord->getType() == IN) {
-            forget++;
-        }
-
-        cout << id << "," << overload << "," << forget << endl;
-    }
-
     return 0;
 }

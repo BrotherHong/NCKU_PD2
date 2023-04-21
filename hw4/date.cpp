@@ -5,13 +5,8 @@ using namespace std;
 
 Date::Date() : Date(0, 0, 0, 0, 0) {}
 
-Date::Date(int year, int month, int day, int hour, int minute) {
-    this->year = year;
-    this->month = month;
-    this->day = day;
-    this->hour = hour;
-    this->minute = minute;
-}
+Date::Date(int year, int month, int day, int hour, int minute) :
+    year(year), month(month), day(day), hour(hour), minute(minute) {}
 
 bool Date::operator < (const Date &o2) const {
     if (year != o2.year) {
@@ -30,10 +25,6 @@ bool Date::operator < (const Date &o2) const {
         return minute < o2.minute;
     }
     return false;
-}
-
-long long Date::operator - (const Date &o2) const {
-    return getTotalMinutes() - o2.getTotalMinutes();
 }
 
 int Date::getYear() const {
@@ -56,21 +47,6 @@ int Date::getMinute() const {
     return minute;
 }
 
-long long Date::getTotalMinutes() const {
-    long long t = year;
-
-    t *= 12; // 12 month per year
-    t += month;
-    t *= 30; // approx 30 day per month
-    t += day;
-    t *= 24; // 24 hr per day
-    t += hour;
-    t *= 60; // 60 min per hr
-    t += minute;
-    
-    return t;
-}
-
 Date Date::fromString(string str) {
     int Y, M, D, h, m;
 
@@ -79,9 +55,11 @@ Date Date::fromString(string str) {
     return Date(Y, M, D, h, m);
 }
 
-bool Date::isSameDay(const Date &o1, const Date &o2) {
-    if (o1.getYear() != o2.getYear()) return false;
-    if (o1.getMonth() != o2.getMonth()) return false;
-    return o1.getDate() == o2.getDate();
+ostream& operator<<(ostream &os, const Date &date) {
+    os << setfill('0') 
+        << setw(4) << date.year 
+        << setw(2) << date.month 
+        << setw(2) << date.day;
+    return os;
 }
 

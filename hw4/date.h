@@ -30,4 +30,7 @@ class Date {
         int minute;
 };
 
+bool isSameDate(const Date &d1, const Date &d2);
+bool isConsecutiveDate(const Date &d1, const Date &d2);
+
 #endif

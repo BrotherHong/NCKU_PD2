@@ -63,3 +63,50 @@ ostream& operator<<(ostream &os, const Date &date) {
     return os;
 }
 
+bool isSameDate(const Date &d1, const Date &d2) {
+    if (d1.getYear() != d2.getYear()) {
+        return false;
+    }
+    if (d1.getMonth() != d2.getMonth()) {
+        return false;
+    }
+    if (d1.getDate() != d2.getDate()) {
+        return false;
+    }
+    return true;
+}
+
+int getTotalDay(const Date &d);
+bool isLeapYear(int year);
+
+bool isConsecutiveDate(const Date &d1, const Date &d2) {
+    int day1 = getTotalDay(d1);
+    int day2 = getTotalDay(d2);
+    return (day2 - day1 == 1);
+}
+
+// From 2012
+int getTotalDay(const Date &d) {
+    int days = 0;
+    const int daysOfMonth[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    const int daysOfYear = 365;
+
+    for (int y = 2012; y < d.getYear(); y++) {
+        days += daysOfYear + isLeapYear(y);
+    }
+
+    for (int m = 1; m < d.getMonth(); m++) {
+        days += daysOfMonth[m];
+        if (m == 2) {
+            days += isLeapYear(d.getYear());
+        }
+    }
+    days += d.getDate();
+
+    return days;
+}
+
+bool isLeapYear(int year) {
+    return (year%400 == 0 || (year%4 == 0 && year%100 != 0));
+}
+

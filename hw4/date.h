@@ -14,6 +14,8 @@ class Date {
         Date(int year, int month, int day, int hour, int minute);
 
         friend ostream& operator<<(ostream &os, const Date &date);
+        friend bool isSameDate(const Date &d1, const Date &d2);
+        friend bool isConsecutiveDate(const Date &d1, const Date &d2);
         bool operator < (const Date &o2) const;
 
         int getYear() const;
@@ -29,8 +31,5 @@ class Date {
         int hour;
         int minute;
 };
-
-bool isSameDate(const Date &d1, const Date &d2);
-bool isConsecutiveDate(const Date &d1, const Date &d2);
 
 #endif

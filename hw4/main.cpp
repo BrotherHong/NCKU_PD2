@@ -21,9 +21,8 @@ typedef struct result_s {
 } Result;
 
 void readRecords(vector<SignRecord> &arr, ifstream&);
-void categorizeById(vector<SignRecord> &arr, map<int, vector<Date>> &mp);
-void uniqueDate(vector<Date> &arr);
-void calculateResult(map<int, vector<Date>> &mp, vector<Result> &results);
+void sortByIdAsMap(vector<SignRecord> &arr, map<int, vector<SignRecord>> &mp);
+void calculateResult(map<int, vector<SignRecord>> &mp, vector<Result> &results);
 bool cmpResult(const Result &r1, const Result &r2);
 
 
@@ -40,11 +39,11 @@ int main(int argc, char **argv) {
 
     sort(records.begin(), records.end());
 
-    map<int, vector<Date>> catDate;
-    categorizeById(records, catDate);
-
+    map<int, vector<SignRecord>> idMap;
     vector<Result> results;
-    calculateResult(catDate, results);
+
+    sortByIdAsMap(records, idMap);
+    calculateResult(idMap, results);
 
     sort(results.begin(), results.end(), cmpResult);
 
@@ -76,38 +75,45 @@ void readRecords(vector<SignRecord> &arr, ifstream &inFile) {
     }
 }
 
-void categorizeById(vector<SignRecord> &arr, map<int, vector<Date>> &mp) {
+void sortByIdAsMap(vector<SignRecord> &arr, map<int, vector<SignRecord>> &mp) {
     for (auto &r : arr) {
         int id = r.getID();
-        mp[id].push_back(r.getDate());
+        mp[id].push_back(r);
     }
 }
 
-void uniqueDate(vector<Date> &arr) {
-    auto it = unique(arr.begin(), arr.end(), isSameDate);
-    arr.erase(it, arr.end());
-}
-
-void calculateResult(map<int, vector<Date>> &mp, vector<Result> &results) {
+void calculateResult(map<int, vector<SignRecord>> &mp, vector<Result> &results) {
     for (auto &p : mp) {
 
         int id = p.first;
-        vector<Date> &v = p.second;
-        uniqueDate(v);
-        v.push_back(Date::fromString("999901010000"));
+        vector<SignRecord> &v = p.second;
+        v.push_back(SignRecord(id, IN, Date::fromString("999901010000")));
 
         Result result(id);
-        int start = 0;
+        int consicutive = 1;
+        int repeat = 0;
+
         for (int i = 1;i < v.size();i++) {
-            if (!isConsecutiveDate(v[i-1], v[i])) {
-                int consicutive = i-start;
-                if (consicutive >= result.consicutive) {
-                    result.consicutive = consicutive;
-                    result.start = v[start];
-                    result.end = v[i-1];
-                }
-                start = i;
+
+            Date prev = v[i-1].getDate();
+            Date curr = v[i].getDate();
+
+            if (isSameDate(prev, curr)) {
+                repeat++;
+                continue;
             }
+
+            if (!isConsecutiveDate(prev, curr)) {
+                if (consicutive >= result.consicutive) {
+                    int start = i-consicutive-repeat;
+                    result.consicutive = consicutive;
+                    result.start = v[start].getDate();
+                    result.end = v[i-1].getDate();
+                }
+                consicutive = 1;
+            }
+
+            consicutive++;
         }
 
         results.push_back(result);

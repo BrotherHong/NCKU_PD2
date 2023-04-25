@@ -90,8 +90,8 @@ void calculateResult(map<int, vector<SignRecord>> &mp, vector<Result> &results) 
         v.push_back(SignRecord(id, IN, Date::fromString("999901010000")));
 
         Result result(id);
+        int start = 0;
         int consicutive = 1;
-        int repeat = 0;
 
         for (int i = 1;i < v.size();i++) {
 
@@ -99,19 +99,17 @@ void calculateResult(map<int, vector<SignRecord>> &mp, vector<Result> &results) 
             Date curr = v[i].getDate();
 
             if (isSameDate(prev, curr)) {
-                repeat++;
                 continue;
             }
 
             if (!isConsecutiveDate(prev, curr)) {
                 if (consicutive >= result.consicutive) {
-                    int start = i-consicutive-repeat;
                     result.consicutive = consicutive;
                     result.start = v[start].getDate();
                     result.end = v[i-1].getDate();
                 }
                 consicutive = 1;
-                repeat = 0;
+                start = i;
             }
 
             consicutive++;

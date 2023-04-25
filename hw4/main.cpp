@@ -87,7 +87,7 @@ void calculateResult(map<int, vector<SignRecord>> &mp, vector<Result> &results) 
 
         int id = p.first;
         vector<SignRecord> &v = p.second;
-        v.push_back(SignRecord(id, IN, Date::fromString("999901010000")));
+        v.push_back(SignRecord(id, IN, Date::fromString("202401010000")));
 
         Result result(id);
         int start = 0;
@@ -110,6 +110,7 @@ void calculateResult(map<int, vector<SignRecord>> &mp, vector<Result> &results) 
                 }
                 consicutive = 1;
                 start = i;
+                continue;
             }
 
             consicutive++;

@@ -16,13 +16,14 @@ class Date {
         friend ostream& operator<<(ostream &os, const Date &date);
         friend bool isSameDate(const Date &d1, const Date &d2);
         friend bool isConsecutiveDate(const Date &d1, const Date &d2);
+        friend int getTotalDay(const Date &d);
         bool operator < (const Date &o2) const;
 
-        int getYear() const;
-        int getMonth() const;
-        int getDate() const;
-        int getHour() const;
-        int getMinute() const;
+        inline int getYear() const;
+        inline int getMonth() const;
+        inline int getDate() const;
+        inline int getHour() const;
+        inline int getMinute() const;
 
     private:
         int year;

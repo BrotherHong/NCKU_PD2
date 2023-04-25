@@ -111,6 +111,7 @@ void calculateResult(map<int, vector<SignRecord>> &mp, vector<Result> &results) 
                     result.end = v[i-1].getDate();
                 }
                 consicutive = 1;
+                repeat = 0;
             }
 
             consicutive++;

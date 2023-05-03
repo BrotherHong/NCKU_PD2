@@ -6,6 +6,7 @@ TrieNode::TrieNode() {
         children[i] = nullptr;
     }
     isEndOfWord = false;
+    ids.clear();
 }
 
 // Trie
@@ -13,7 +14,7 @@ Trie::Trie() {
     root = new TrieNode();
 }
 
-void Trie::insert(const string &word) {
+void Trie::insert(const string &word, int id) {
     TrieNode *node = root;
 
     for (const char &c : word) {
@@ -25,6 +26,7 @@ void Trie::insert(const string &word) {
     }
 
     node->isEndOfWord = true;
+    node->ids.insert(id);
 }
 
 bool Trie::totalMatch(const string &word) {
@@ -41,4 +43,20 @@ bool Trie::totalMatch(const string &word) {
     }
 
     return (node != nullptr && node->isEndOfWord);
+}
+
+set<int> Trie::getTotalMatchIds(const string &word) {
+    TrieNode *node = root;
+
+    for (const char &c : word) {
+        int idx = c-'a';
+
+        if (node->children[idx] == nullptr) {
+            return {};
+        }
+
+        node = node->children[idx];
+    }
+
+    return node->ids;
 }

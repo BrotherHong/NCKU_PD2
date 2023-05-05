@@ -101,7 +101,7 @@ void removePunctuation(string &str) {
     string tmp = str;
     str = "";
     for (char &c : tmp) {
-        if (!ispunct(c)) {
+        if (isalpha(c) || isspace(c)) {
             str += c;
         }
     }

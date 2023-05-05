@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <sstream>
+#include <cstring>
 #include "database.h"
 using namespace std;
 
@@ -26,14 +26,12 @@ int main(int argc, char **argv) {
 
     string line;
     while (getline(stream, line)) {
-        // remove nextline
-        line = line.substr(0, line.size()-1);
         
         int cutIdx = 0;
         while (line[cutIdx] != ',') cutIdx++;
 
         int id = stoi(line.substr(0, cutIdx));
-        string content = line.substr(cutIdx+1);
+        string content = line.substr(cutIdx+2);
 
         vector<string> words;
         removePunctuation(content);
@@ -48,8 +46,6 @@ int main(int argc, char **argv) {
     stream = openFileStream(queryFileName);
 
     while (getline(stream, line)) {
-        // remove nextline
-        line = line.substr(0, line.size()-1);
 
         vector<string> words;
         toLowerCase(line);
@@ -108,10 +104,12 @@ void removePunctuation(string &str) {
 }
 
 void splitStringBySpace(const string &str, vector<string> &arr) {
-    stringstream ss(str);
-    string sub;
-    while (getline(ss, sub, ' ')) {
-        arr.push_back(sub);
+    const char *delim = " ";
+    char *token = strtok(const_cast<char*>(str.c_str()), delim);
+
+    while (token != nullptr) {
+        arr.push_back(string(token));
+        token = strtok(nullptr, delim);
     }
 }
 

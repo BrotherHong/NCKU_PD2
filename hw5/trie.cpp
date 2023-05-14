@@ -26,7 +26,7 @@ void Trie::insert(const string &word, int id) {
     }
 
     node->isEndOfWord = true;
-    node->ids.insert(id);
+    node->ids.push_back(id);
 }
 
 bool Trie::totalMatch(const string &word) {
@@ -45,7 +45,7 @@ bool Trie::totalMatch(const string &word) {
     return (node != nullptr && node->isEndOfWord);
 }
 
-set<int> Trie::getTotalMatchIds(const string &word) {
+vector<int> Trie::getTotalMatchIds(const string &word) {
     TrieNode *node = root;
 
     for (const char &c : word) {

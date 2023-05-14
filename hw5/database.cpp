@@ -6,6 +6,6 @@ void Database::insertWords(const vector<string> &words, int id) {
     }
 }
 
-set<int> Database::searchTotalMatchIds(const string &word) {
+vector<int> Database::searchTotalMatchIds(const string &word) {
     return trie.getTotalMatchIds(word);
 }

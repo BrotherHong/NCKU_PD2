@@ -13,27 +13,44 @@ void splitStringBySpace(const string &str, vector<string> &arr);
 set<int>& getIntersection(set<int> &origin, set<int> &s);
 
 int main(int argc, char **argv) {
+    ios_base::sync_with_stdio(0);
+    cout.tie(0);
     
     char *corpusFileName = argv[1];
     char *queryFileName = argv[2];
 
-    Database db;
+    vector<string> corpus;
+    vector<string> query;
+
     ifstream stream;
-    set<int> allIds;
+    string line;
 
     // read corpus
     stream = openFileStream(corpusFileName);
-
-    string line;
     while (getline(stream, line)) {
+        corpus.push_back(line);
+    }
+
+    // read query
+    stream = openFileStream(queryFileName);
+    while (getline(stream, line)) {
+        query.push_back(line);
+    }
+
+    Database db;
+    set<int> allIds;
+    vector<string> words;
+
+    // insert corpus
+    for (string &str : corpus) {
+        words.clear();
         
         int cutIdx = 0;
-        while (line[cutIdx] != ',') cutIdx++;
+        while (str[cutIdx] != ',') cutIdx++;
 
-        int id = stoi(line.substr(0, cutIdx));
-        string content = line.substr(cutIdx+2);
+        int id = stoi(str.substr(0, cutIdx));
+        string content = str.substr(cutIdx+2);
 
-        vector<string> words;
         removePunctuation(content);
         toLowerCase(content);
         splitStringBySpace(content, words);
@@ -42,25 +59,24 @@ int main(int argc, char **argv) {
         allIds.insert(id);
     }
 
-    // read query
-    stream = openFileStream(queryFileName);
+    // run query
+    set<int> answer, ids;
+    for (string &q : query) {
+        words.clear();
 
-    while (getline(stream, line)) {
+        toLowerCase(q);
+        splitStringBySpace(q, words);
 
-        vector<string> words;
-        toLowerCase(line);
-        splitStringBySpace(line, words);
-
-        set<int> answer = allIds;
+        answer = allIds;
         
         for (const string &word : words) {
-            set<int> ids = db.searchTotalMatchIds(word);
+            ids = db.searchTotalMatchIds(word);
             answer = getIntersection(answer, ids);
             if (answer.empty()) break;
         }
 
         if (answer.empty()) {
-            cout << -1 << endl;
+            cout << -1 << '\n';
         } else {
             bool first = true;
             for (const int &id : answer) {
@@ -69,7 +85,7 @@ int main(int argc, char **argv) {
 
                 cout << id;
             }
-            cout << endl;
+            cout << '\n';
         }
     }
 

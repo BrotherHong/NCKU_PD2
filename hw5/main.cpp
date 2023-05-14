@@ -73,12 +73,14 @@ int main(int argc, char **argv) {
 
         answer = allIds;
         
+        // do intersection
         for (const string &word : words) {
             ids = db.searchTotalMatchIds(word);
             answer = getIntersection(answer, ids);
             if (answer.empty()) break;
         }
 
+        // output answer
         if (answer.empty()) {
             cout << -1 << '\n';
         } else {

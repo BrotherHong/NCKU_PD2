@@ -12,6 +12,9 @@
 # unignore csv file
 !*.csv
 
+# unignore txt file
+!*.txt
+
 # unignore .gitignore
 !.gitignore
 

@@ -8,7 +8,7 @@ using namespace std;
 
 class Database {
 public:
-    void insertWords(const vector<string> &words, int id);
+    void insertSentence(const vector<string> &words, int id);
     vector<int> searchTotalMatchIds(const string &word);
 private:
     Trie trie;

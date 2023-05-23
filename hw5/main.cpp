@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
         toLowerCase(content);
         splitStringBySpace(content, words);
 
-        db.insertWords(words, id);
+        db.insertSentence(words, id);
         allIds.push_back(id);
     }
 

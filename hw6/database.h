@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include "trie.h"
 using namespace std;
 
@@ -14,6 +15,7 @@ public:
     double getIDF(const string &word);
 private:
     Trie trie;
+    unordered_map<string, vector<int>> mp;
     int sentenceCount;
 };
 

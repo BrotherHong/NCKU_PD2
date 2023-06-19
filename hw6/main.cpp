@@ -6,6 +6,8 @@
 #include "database.h"
 using namespace std;
 
+const double ERROR = 0.000001;
+
 ifstream openFileStream(const char *fileName);
 
 void toLowerCase(string &str);
@@ -14,8 +16,8 @@ void splitStringBySpace(const string &str, vector<string> &arr);
 vector<int> getIntersection(vector<int> &origin, vector<int> &s);
 
 int main(int argc, char **argv) {
-    // ios_base::sync_with_stdio(0);
-    // cout.tie(0);
+    ios_base::sync_with_stdio(0);
+    cout.tie(0);
     
     char *corpusFileName = argv[1];
     char *queryFileName = argv[2];
@@ -93,7 +95,7 @@ int main(int argc, char **argv) {
         // sort the answer
         sort(answer.begin(), answer.end(), [] 
         (const pair<int, double> &p1, const pair<int, double> &p2) {
-            if (p1.second == p2.second) {
+            if (abs(p1.second-p2.second) < ERROR) {
                 return p1.first < p2.first;
             }
             return p1.second > p2.second;

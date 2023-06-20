@@ -14,6 +14,7 @@ void toLowerCase(string &str);
 void removePunctuation(string &str);
 void splitStringBySpace(const string &str, vector<string> &arr);
 vector<int> getIntersection(vector<int> &origin, vector<int> &s);
+vector<int> getUnion(vector<int> &s1, vector<int> &s2);
 
 int main(int argc, char **argv) {
     ios_base::sync_with_stdio(0);
@@ -66,48 +67,79 @@ int main(int argc, char **argv) {
     }
 
     // run query
-    vector<pair<int, double>> answer;
-    unordered_map<int, double> mp; // {id, idf_sum}
+    vector<pair<int, double>> answer; // [id, rank]
+    vector<int> targetCorpus;
     for (string &q : query) {
         words.clear();
         answer.clear();
-        mp.clear();
+        targetCorpus.clear();
 
         toLowerCase(q);
         splitStringBySpace(q, words);
 
-        // calculate idf_sum of each sentence
+        // get target corpus id
         for (const string &word : words) {
-            double idf = db.getIDF(word);
-            if (idf == 0) continue;
-            
-            for (int id : db.searchTotalMatchIds(word)) {
-                mp[id] += idf;
+            vector<int> idSet = db.searchTotalMatchIds(word);
+            targetCorpus = getUnion(targetCorpus, idSet);
+        }
+
+        // calculate rank for each corpus id
+        for (int id : targetCorpus) {
+
+            // find top-3-idf keywords for this sentence
+            // and calculate tf-value of each keywords
+            vector<pair<double, double>> v; // [idf, tf]
+            for (const string &qword : words) {
+                if (!db.hasWord(id, qword)) {
+                    continue;
+                }
+                double idf = db.getIDF(qword);
+                double tf = db.getTermFrequency(qword, id);
+                v.push_back(make_pair(idf, tf));
+            }
+
+            sort(v.begin(), v.end(), 
+            [] (pair<double, double> &p1, pair<double, double> &p2) {
+                double &idf1 = p1.first, &tf1 = p1.second;
+                double &idf2 = p2.first, &tf2 = p2.second;
+                if (abs(idf1-idf2) < ERROR) {
+                    return idf1*tf1 > idf2*tf2;
+                }
+                return idf1 > idf2;
+            });
+
+            if (v.size() > 3) {
+                v = vector<pair<double, double>>(v.begin(), v.begin()+3);
+            }
+
+            // calculate the rank of the sentence
+            // rank = sum(tf*idf)
+            double rank = 0;
+            for (auto &[idf, tf] : v) {
+                rank += idf * tf;
+            }
+            if (rank > 0) {
+                answer.push_back(make_pair(id, rank));
             }
         }
 
-        // move map element to vector
-        auto it = mp.begin();
-        for (;it != mp.end();++it) {
-            answer.push_back(make_pair(it->first, it->second));
-        }
-
-        // sort the answer
-        sort(answer.begin(), answer.end(), [] 
-        (const pair<int, double> &p1, const pair<int, double> &p2) {
+        // sort answer
+        sort(answer.begin(), answer.end(), 
+        [] (const pair<int, double> &p1, const pair<int, double> &p2) {
             if (abs(p1.second-p2.second) < ERROR) {
                 return p1.first < p2.first;
             }
             return p1.second > p2.second;
         });
 
-        // output top k
+        // output top k answer
         while (answer.size() < k) answer.push_back(make_pair(-1, 0));
         for (int i = 0;i < k;i++) {
             if (i > 0) cout << ' ';
             cout << answer[i].first;
         }
         cout << '\n';
+        
     }
 
     return 0;
@@ -153,5 +185,12 @@ void splitStringBySpace(const string &str, vector<string> &arr) {
 vector<int> getIntersection(vector<int> &origin, vector<int> &s) {
     vector<int> result;
     set_intersection(origin.begin(), origin.end(), s.begin(), s.end(), back_inserter(result));
+    return result;
+}
+
+vector<int> getUnion(vector<int> &s1, vector<int> &s2) {
+    vector<int> result(s1.size()+s2.size());
+    auto it = set_union(s1.begin(), s1.end(), s2.begin(), s2.end(), result.begin());
+    result.resize(it-result.begin());
     return result;
 }
